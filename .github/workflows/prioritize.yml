@@ -1,0 +1,65 @@
+name: FAST - prioritize
+
+on:
+  schedule:
+    - cron: '0 16 * * 1-5'  # At 12 PM every day - BR time
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      subject:
+        description: 'flex_v3, grep_v3, gzip_v1, make_v1, sed_v6, chart_v0, closure_v0, lang_v0, math_v0, and time_v0'
+        default: 'flex_v3'
+      entity:
+        description: 'function, line, and branch, for white-box approaches; and bbox, for black-box TCP'
+        default: 'bbox'
+      algorithm:
+        description: ' FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all, GT, GA, GA-S, ART-F, ART-D, STR, and I-TSD'
+        default: 'FAST-pw'
+      repetitions:
+        description: 'number of times to run'
+        default: '10'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [2.7]
+        
+    steps:
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install dependencies
+        run: |
+          curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+          python2 get-pip.py
+          if [ -f requirements.txt ]; then pip2 install -r requirements.txt; fi
+      # Runs a set of commands using the runners shell
+      - name: Run tests
+        id: run_tests
+        shell: bash
+        run: |
+          cd $GITHUB_WORKSPACE
+          bash actions.sh ${{ github.event.inputs.subject }} ${{ github.event.inputs.entity }} ${{ github.event.inputs.algorithm }} ${{ github.event.inputs.repetitions }}
+
+      - name: Register the generated report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: behave_report
+          path: ${{github.workspace}}/$subject/$algorithm-$entity.tsv
+          retention-days: 30
