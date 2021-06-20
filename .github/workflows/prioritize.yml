@@ -60,6 +60,6 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: behave_report
-          path: ${{github.workspace}}/${{ github.event.inputs.subject }}/${{ github.event.inputs.algorithm }}-${{ github.event.inputs.entity }}.tsv
+          name: prioritize run report
+          path: ${{github.workspace}}/${{ github.event.inputs.subject }}*
           retention-days: 30

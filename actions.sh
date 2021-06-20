@@ -11,16 +11,16 @@ repetitions=$4
 echo "========================================="
 echo "Starting FAST prioritize"
 echo "========================================="
-if [ "$subject" == ! -z ]; then
+if [ -z "$subject" ]; then
   subject="flex_v3"
 fi
-if [ "$entity" == ! -z ]; then
+if [ -z "$entity" ]; then
   entity="bbox"
 fi
-if [ "$algorithm" == ! -z ]; then
+if [ -z "$algorithm" ]; then
   algorithm="FAST-pw"
 fi
-if [ "$repetitions" == ! -z ]; then
+if [ -z "$repetitions" ]; then
   repetitions="10"
 fi
 timeout 60m python2 py/prioritize.py $subject $entity $algorithm $repetitions
