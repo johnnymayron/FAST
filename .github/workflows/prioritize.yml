@@ -61,5 +61,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: behave_report
-          path: ${{github.workspace}}/$subject/$algorithm-$entity.tsv
+          path: ${{github.workspace}}/${{ github.event.inputs.subject }}/${{ github.event.inputs.algorithm }}-${{ github.event.inputs.entity }}.tsv
           retention-days: 30

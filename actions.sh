@@ -11,13 +11,22 @@ repetitions=$4
 echo "========================================="
 echo "Starting FAST prioritize"
 echo "========================================="
-
-
-#Run behave in a sub command
+if [ "$subject" == ! -z ]; then
+  subject="flex_v3"
+fi
+if [ "$entity" == ! -z ]; then
+  entity="bbox"
+fi
+if [ "$algorithm" == ! -z ]; then
+  algorithm="FAST-pw"
+fi
+if [ "$repetitions" == ! -z ]; then
+  repetitions="10"
+fi
 timeout 60m python2 py/prioritize.py $subject $entity $algorithm $repetitions
 
 echo "========================================="
 echo "Execution finished"
 echo "========================================="
 #Print the result in the console
-cat /output/$subject/$algorithm-$entity.tsv
+cat output/$subject/$algorithm-$entity.tsv
