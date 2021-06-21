@@ -60,6 +60,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: scalability-testset
+          path: scalability/input/
 
       - name: Run FAST - scalability
         id: FAST-scalability
