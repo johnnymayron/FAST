@@ -19,7 +19,7 @@ fi
 
 timeout 30m python2 tools/generate-scalability-input.py $test_suite_size $test_case_size
 
-timeout 30m py/scalability.py $test_suite_size $test_case_size $algorithm
+timeout 30m python2 py/scalability.py $test_suite_size $test_case_size $algorithm
 
 echo "========================================="
 echo "Execution finished"
