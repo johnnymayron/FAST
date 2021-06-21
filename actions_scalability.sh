@@ -14,7 +14,7 @@ if [ -z "$test_case_size" ]; then
   test_case_size="medium"
 fi
 if [ -z "$algorithm" ]; then
-  algorithm="FAST-pw"
+  algorithm="FAST-one"
 fi
 
 timeout 30m python2 py/scalability.py $test_suite_size $test_case_size $algorithm
