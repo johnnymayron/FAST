@@ -62,11 +62,12 @@ jobs:
           name: scalability-testset
 
       - name: Run FAST - scalability
-          id: FAST-scalability
+          id: scalability
           shell: bash
           run: |
             cd $GITHUB_WORKSPACE
-            bash actions_scalability.sh ${{ github.event.inputs.test_suite_size }} ${{ github.event.inputs.test_case_size }} ${{ github.event.inputs.algorithm }}
+            bash actions_scalability.sh ${{ github.event.inputs.test_suite_size }}
+            ${{ github.event.inputs.test_case_size }} ${{ github.event.inputs.algorithm }}
 
       - name: Register the scalability report
           if: ${{ always() }}
