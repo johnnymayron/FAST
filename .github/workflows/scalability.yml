@@ -1,27 +1,25 @@
-name: FAST - prioritize
+name: FAST - scalability
 
 on:
   schedule:
-    - cron: '0 16 * * 1-5'  # At 12 PM every day - BR time
+    - cron: '0 17 * * 1-5'  # At 13 PM every day - BR time
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      subject:
-        description: 'flex_v3, grep_v3, gzip_v1, make_v1, sed_v6, chart_v0, closure_v0, lang_v0, math_v0, and time_v0'
-        default: 'flex_v3'
-      entity:
-        description: 'function, line, and branch, for white-box approaches; and bbox, for black-box TCP'
-        default: 'bbox'
+      test_suite_size:
+        description: 'number of test cases in the test suite. a positive integer, e.g. 1000.'
+        default: '1000'
+      test_case_size:
+        description: 'size of the test cases: small, medium, large'
+        default: 'medium'
       algorithm:
-        description: ' FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all, GT, GA, GA-S, ART-F, ART-D, STR, and I-TSD'
-        default: 'FAST-pw'
-      repetitions:
-        description: 'number of times to run'
-        default: '10'
+        description: 'algorithm used for prioritization: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all, STR, I-TSD, ART-D, ART-F, GT, GA, GA-S'
+        default: 'FAST-one'
 
 jobs:
   build:
@@ -32,7 +30,6 @@ jobs:
         
     steps:
       - uses: actions/checkout@v2
-
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -49,12 +46,12 @@ jobs:
         shell: bash
         run: |
           cd $GITHUB_WORKSPACE
-          bash actions_prioritize.sh ${{ github.event.inputs.subject }} ${{ github.event.inputs.entity }} ${{ github.event.inputs.algorithm }} ${{ github.event.inputs.repetitions }}
+          bash actions_scalability.sh ${{ github.event.inputs.test_suite_size }} ${{ github.event.inputs.test_case_size }} ${{ github.event.inputs.algorithm }}
 
-      - name: Register the prioritize report
+      - name: Register the scalability report
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
           name: prioritize run report
-          path: ${{github.workspace}}/output/*
+          path: ${{github.workspace}}/scalability/*
           retention-days: 30
