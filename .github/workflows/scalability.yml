@@ -62,17 +62,17 @@ jobs:
           name: scalability-testset
 
       - name: Run FAST - scalability
-          id: scalability
-          shell: bash
-          run: |
-            cd $GITHUB_WORKSPACE
-            bash actions_scalability.sh ${{ github.event.inputs.test_suite_size }}
-            ${{ github.event.inputs.test_case_size }} ${{ github.event.inputs.algorithm }}
+        id: FAST-scalability
+        shell: bash
+        run: |
+          cd $GITHUB_WORKSPACE
+          bash actions_scalability.sh ${{ github.event.inputs.test_suite_size }}
+          ${{ github.event.inputs.test_case_size }} ${{ github.event.inputs.algorithm }}
 
       - name: Register the scalability report
-          if: ${{ always() }}
-          uses: actions/upload-artifact@v2
-          with:
-            name: prioritize run report
-            path: ${{github.workspace}}/scalability/*
-            retention-days: 30
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: prioritize run report
+          path: ${{github.workspace}}/scalability/*
+          retention-days: 30
