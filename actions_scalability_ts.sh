@@ -13,14 +13,9 @@ fi
 if [ -z "$test_case_size" ]; then
   test_case_size="medium"
 fi
-if [ -z "$algorithm" ]; then
-  algorithm="FAST-pw"
-fi
 
-timeout 30m python2 py/scalability.py $test_suite_size $test_case_size $algorithm
+timeout 30m python2 tools/generate-scalability-input.py $test_suite_size $test_case_size
 
 echo "========================================="
-echo "Execution finished"
+echo "Test set generated"
 echo "========================================="
-#Print the result in the console
-cat scalability/output/$algorithm-$test_suite_size.tsv

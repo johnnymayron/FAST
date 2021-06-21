@@ -44,8 +44,8 @@ jobs:
           python2 get-pip.py
           if [ -f requirements.txt ]; then pip2 install -r requirements.txt; fi
 
-      - name: Run tests
-        id: run_tests
+      - name: Run FAST - prioritize
+        id: FAST-prioritize
         shell: bash
         run: |
           cd $GITHUB_WORKSPACE
@@ -55,6 +55,6 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: prioritize run report
+          name: prioritize-report
           path: ${{github.workspace}}/output/*
           retention-days: 30

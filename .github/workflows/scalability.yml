@@ -22,7 +22,7 @@ on:
         default: 'FAST-one'
 
 jobs:
-  build:
+  job:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -41,17 +41,37 @@ jobs:
           python2 get-pip.py
           if [ -f requirements.txt ]; then pip2 install -r requirements.txt; fi
 
-      - name: Run tests
-        id: run_tests
+      - name: Run FAST - generate scalability
+        id: FAST-generate-scalability
         shell: bash
         run: |
           cd $GITHUB_WORKSPACE
-          bash actions_scalability.sh ${{ github.event.inputs.test_suite_size }} ${{ github.event.inputs.test_case_size }} ${{ github.event.inputs.algorithm }}
+          bash actions_scalability_ts.sh ${{ github.event.inputs.test_suite_size }} ${{ github.event.inputs.test_case_size }}
 
-      - name: Register the scalability report
+      - name: Generating scalability artifact testset
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: prioritize run report
-          path: ${{github.workspace}}/scalability/*
+          name: scalability-testset
+          path: ${{github.workspace}}/scalability/input/*.txt
           retention-days: 30
+
+      - name: Download scalability artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: scalability-testset
+
+      - name: Run FAST - scalability
+          id: FAST-scalability
+          shell: bash
+          run: |
+            cd $GITHUB_WORKSPACE
+            bash actions_scalability.sh ${{ github.event.inputs.test_suite_size }} ${{ github.event.inputs.test_case_size }} ${{ github.event.inputs.algorithm }}
+
+      - name: Register the scalability report
+          if: ${{ always() }}
+          uses: actions/upload-artifact@v2
+          with:
+            name: prioritize run report
+            path: ${{github.workspace}}/scalability/*
+            retention-days: 30
